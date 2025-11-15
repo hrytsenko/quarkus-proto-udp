@@ -56,8 +56,10 @@ class UdpServer {
       var responseContent = responseEnvelope.toByteArray();
       socket.send(Buffer.buffer(responseContent), clientPort, clientHost,
           result -> {
-            if (result.failed()) {
-              log.error("Response failed", result.cause());
+            if (result.succeeded()) {
+              log.info("Response sent {}", responseEnvelope.getId());
+            } else {
+              log.error("Cannot send response", result.cause());
             }
           });
     } catch (Exception exception) {
