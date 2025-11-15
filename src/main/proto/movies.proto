@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package data;
+
+option java_multiple_files = true;
+
+message Envelope {
+  int64 id = 1;
+
+  oneof kind {
+    CreateMovieRequest create_movie_request = 10;
+    FindMovieRequest find_movie_request = 11;
+
+    CreateMovieResponse create_movie_response = 20;
+    FindMovieResponse find_movie_response = 21;
+
+    ErrorResponse error_response = 30;
+  }
+}
+
+message CreateMovieRequest {
+  string imdb = 1;
+  string title = 2;
+}
+
+message CreateMovieResponse {
+}
+
+message FindMovieRequest {
+  string imdb = 1;
+}
+
+message FindMovieResponse {
+  bool exists = 1;
+  string imdb = 2;
+  string title = 3;
+}
+
+message ErrorResponse {
+  enum Code {
+    UNKNOWN_REQUEST = 0;
+  }
+
+  Code code = 1;
+}

@@ -1,0 +1,26 @@
+@baseUrl = http://localhost:8080
+
+### Create movie
+POST {{baseUrl}}/movies
+Content-Type: application/json
+
+{
+  "imdb": "0084787",
+  "title": "The Thing"
+}
+
+> {%
+  client.test("Done", function () {
+    client.assert(response.status === 204);
+  });
+%}
+
+### Find movie
+GET {{baseUrl}}/movies/0084787
+
+> {%
+  client.test("Done", function () {
+    client.assert(response.status === 200);
+    client.assert(response.body.imdb === "0084787");
+  });
+%}
