@@ -33,7 +33,7 @@ class UdpAdapter {
         .setCreateMovieRequest(requestPayload)
         .build();
     var responseEnvelope = client.sendRequest(requestEnvelope).get();
-    failOnError(responseEnvelope);
+    failOnError(responseEnvelope, Envelope.KindCase.CREATE_MOVIE_RESPONSE);
   }
 
   @SneakyThrows
@@ -46,7 +46,7 @@ class UdpAdapter {
         .setFindMovieRequest(requestPayload)
         .build();
     var responseEnvelope = client.sendRequest(requestEnvelope).get();
-    failOnError(responseEnvelope);
+    failOnError(responseEnvelope, Envelope.KindCase.FIND_MOVIE_RESPONSE);
 
     var responsePayload = responseEnvelope.getFindMovieResponse();
     if (!responsePayload.getExists()) {
@@ -59,9 +59,13 @@ class UdpAdapter {
     return Optional.of(movie);
   }
 
-  private void failOnError(Envelope responseEnvelope) {
+  private void failOnError(Envelope responseEnvelope, Envelope.KindCase expectedResponse) {
     if (responseEnvelope.hasErrorResponse()) {
-      log.error("Error received {}", responseEnvelope);
+      log.error("Error response {}", responseEnvelope);
+      throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+    }
+    if (responseEnvelope.getKindCase() != expectedResponse) {
+      log.info("Unexpected response {}", responseEnvelope);
       throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
     }
   }
