@@ -9,7 +9,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import lombok.Builder;
-import lombok.SneakyThrows;
 
 @Path("/movies")
 class MovieResource {
@@ -17,14 +16,12 @@ class MovieResource {
   @Inject
   UdpAdapter udpAdapter;
 
-  @SneakyThrows
   @POST
   @Consumes("application/json")
   public void createMovie(Movie movie) {
     udpAdapter.createMovie(movie);
   }
 
-  @SneakyThrows
   @GET
   @Path("/{imdb}")
   @Produces("application/json")
