@@ -19,9 +19,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 @ApplicationScoped
 class UdpClient {
 
-  @Inject
-  Vertx vertx;
-
   @ConfigProperty(name = "client.host")
   String clientHost;
   @ConfigProperty(name = "client.port")
@@ -34,9 +31,11 @@ class UdpClient {
   @ConfigProperty(name = "server.port")
   int serverPort;
 
-  Map<Long, Promise<Envelope>> promises = new ConcurrentHashMap<>();
+  @Inject
+  Vertx vertx;
+  DatagramSocket socket;
 
-  private DatagramSocket socket;
+  Map<Long, Promise<Envelope>> promises = new ConcurrentHashMap<>();
 
   @PostConstruct
   void init() {

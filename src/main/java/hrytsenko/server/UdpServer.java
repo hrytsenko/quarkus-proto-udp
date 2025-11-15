@@ -16,14 +16,13 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 @ApplicationScoped
 class UdpServer {
 
-  @Inject
-  Vertx vertx;
-
   @ConfigProperty(name = "server.host")
   String serverHost;
   @ConfigProperty(name = "server.port")
   int serverPort;
 
+  @Inject
+  Vertx vertx;
   DatagramSocket socket;
 
   @Inject
