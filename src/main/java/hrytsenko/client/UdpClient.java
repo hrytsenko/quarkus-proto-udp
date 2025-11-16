@@ -35,7 +35,7 @@ class UdpClient {
   Vertx vertx;
   DatagramSocket socket;
 
-  Map<Long, Promise<Envelope>> promises = new ConcurrentHashMap<>();
+  Map<Long, Promise<Envelope>> responsePromises = new ConcurrentHashMap<>();
 
   @PostConstruct
   void init() {
@@ -59,11 +59,11 @@ class UdpClient {
     try {
       var responseContent = packet.data().getBytes();
       var responseEnvelope = Envelope.parseFrom(responseContent);
-      log.info("Received response {}", responseEnvelope.getId());
+      log.info("Received response {}", responseEnvelope);
 
-      var promise = promises.get(responseEnvelope.getId());
-      if (promise != null) {
-        promise.tryComplete(responseEnvelope);
+      var responsePromise = responsePromises.get(responseEnvelope.getId());
+      if (responsePromise != null) {
+        responsePromise.tryComplete(responseEnvelope);
       }
     } catch (Exception exception) {
       log.error("Cannot handle response", exception);
@@ -73,11 +73,11 @@ class UdpClient {
   CompletableFuture<Envelope> sendRequest(Envelope requestEnvelope) {
     log.info("Send request {}", requestEnvelope.getId());
     var requestFuture = new CompletableFuture<Envelope>();
-    byte[] requestContent = requestEnvelope.toByteArray();
+    var requestContent = requestEnvelope.toByteArray();
     socket.send(Buffer.buffer(requestContent), serverPort, serverHost,
         result -> {
           if (result.succeeded()) {
-            log.info("Request sent {}", requestEnvelope.getId());
+            log.info("Request sent {}", requestEnvelope);
           } else {
             log.error("Cannot send request", result.cause());
             requestFuture.completeExceptionally(result.cause());
@@ -86,13 +86,13 @@ class UdpClient {
 
     var requestTimer = vertx.setTimer(clientTimeout, id -> {
       log.info("Request dropped {}", requestEnvelope.getId());
-      promises.remove(requestEnvelope.getId());
+      responsePromises.remove(requestEnvelope.getId());
       requestFuture.completeExceptionally(new RuntimeException("Request dropped"));
     });
 
-    var promise = Promise.<Envelope>promise();
-    promises.put(requestEnvelope.getId(), promise);
-    promise.future().onComplete(result -> {
+    var responsePromise = Promise.<Envelope>promise();
+    responsePromises.put(requestEnvelope.getId(), responsePromise);
+    responsePromise.future().onComplete(result -> {
       log.info("Request completed {}", requestEnvelope.getId());
       vertx.cancelTimer(requestTimer);
       if (result.succeeded()) {

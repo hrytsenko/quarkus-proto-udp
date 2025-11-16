@@ -36,7 +36,7 @@ class UdpAdapterTest {
             .build())
         .build();
 
-    var actualResponse = udpAdapter.handle(sourceRequest);
+    var actualResponse = udpAdapter.handleRequest(sourceRequest);
 
     var expectedResponse = Envelope.newBuilder()
         .setId(1)
@@ -63,7 +63,7 @@ class UdpAdapterTest {
             .build())
         .build();
 
-    var actualResponse = udpAdapter.handle(sourceRequest);
+    var actualResponse = udpAdapter.handleRequest(sourceRequest);
 
     var expectedResponse = Envelope.newBuilder()
         .setId(1)
@@ -91,7 +91,7 @@ class UdpAdapterTest {
             .build())
         .build();
 
-    var actualResponse = udpAdapter.handle(sourceRequest);
+    var actualResponse = udpAdapter.handleRequest(sourceRequest);
 
     var expectedResponse = Envelope.newBuilder()
         .setId(1)
@@ -112,7 +112,7 @@ class UdpAdapterTest {
         .setId(1)
         .build();
 
-    var actualResponse = udpAdapter.handle(sourceRequest);
+    var actualResponse = udpAdapter.handleRequest(sourceRequest);
 
     var expectedResponse = Envelope.newBuilder()
         .setId(1)

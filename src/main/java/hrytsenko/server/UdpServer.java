@@ -49,15 +49,15 @@ class UdpServer {
     try {
       var requestContent = packet.data().getBytes();
       var requestEnvelope = Envelope.parseFrom(requestContent);
-      log.info("Received request {}", requestEnvelope.getId());
+      log.info("Received request {}", requestEnvelope);
 
-      var responseEnvelope = udpAdapter.handle(requestEnvelope);
+      var responseEnvelope = udpAdapter.handleRequest(requestEnvelope);
 
       var responseContent = responseEnvelope.toByteArray();
       socket.send(Buffer.buffer(responseContent), clientPort, clientHost,
           result -> {
             if (result.succeeded()) {
-              log.info("Response sent {}", responseEnvelope.getId());
+              log.info("Response sent {}", responseEnvelope);
             } else {
               log.error("Cannot send response", result.cause());
             }

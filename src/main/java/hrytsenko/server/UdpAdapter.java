@@ -17,7 +17,7 @@ class UdpAdapter {
   @Inject
   MovieRepository movieRepository;
 
-  Envelope handle(Envelope request) {
+  Envelope handleRequest(Envelope request) {
     return switch (request.getKindCase()) {
       case CREATE_MOVIE_REQUEST -> createMovie(request);
       case FIND_MOVIE_REQUEST -> findMovie(request);
@@ -25,9 +25,9 @@ class UdpAdapter {
     };
   }
 
-  private Envelope createMovie(Envelope request) {
-    log.info("Create movie {}", request);
-    var requestPayload = request.getCreateMovieRequest();
+  private Envelope createMovie(Envelope requestEnvelope) {
+    log.info("Create movie {}", requestEnvelope);
+    var requestPayload = requestEnvelope.getCreateMovieRequest();
     var movie = Movie.builder()
         .imdb(requestPayload.getImdb())
         .title(requestPayload.getTitle())
@@ -37,14 +37,14 @@ class UdpAdapter {
     var responsePayload = CreateMovieResponse.newBuilder()
         .build();
     return Envelope.newBuilder()
-        .setId(request.getId())
+        .setId(requestEnvelope.getId())
         .setCreateMovieResponse(responsePayload)
         .build();
   }
 
-  private Envelope findMovie(Envelope request) {
-    log.info("Find movie {}", request);
-    var requestPayload = request.getFindMovieRequest();
+  private Envelope findMovie(Envelope requestEnvelope) {
+    log.info("Find movie {}", requestEnvelope);
+    var requestPayload = requestEnvelope.getFindMovieRequest();
     var movie = movieRepository.findMovie(requestPayload.getImdb());
 
     var responsePayload = movie
@@ -57,17 +57,18 @@ class UdpAdapter {
             .setExists(false)
             .build());
     return Envelope.newBuilder()
-        .setId(request.getId())
+        .setId(requestEnvelope.getId())
         .setFindMovieResponse(responsePayload)
         .build();
   }
 
-  private static Envelope unknownRequest(Envelope request) {
+  private static Envelope unknownRequest(Envelope requestEnvelope) {
+    log.info("Unknown request {}", requestEnvelope);
     var errorPayload = ErrorResponse.newBuilder()
         .setCode(Code.UNKNOWN_REQUEST)
         .build();
     return Envelope.newBuilder()
-        .setId(request.getId())
+        .setId(requestEnvelope.getId())
         .setErrorResponse(errorPayload)
         .build();
   }
