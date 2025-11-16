@@ -18,7 +18,7 @@ class UdpAdapter {
   MovieRepository movieRepository;
 
   Envelope handleRequest(Envelope request) {
-    return switch (request.getKindCase()) {
+    return switch (request.getPayloadCase()) {
       case CREATE_MOVIE_REQUEST -> createMovie(request);
       case FIND_MOVIE_REQUEST -> findMovie(request);
       default -> unknownRequest(request);

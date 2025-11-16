@@ -7,12 +7,12 @@ option java_multiple_files = true;
 message Envelope {
   int64 id = 1;
 
-  oneof kind {
+  oneof payload {
     CreateMovieRequest create_movie_request = 10;
-    FindMovieRequest find_movie_request = 11;
+    CreateMovieResponse create_movie_response = 11;
 
-    CreateMovieResponse create_movie_response = 20;
-    FindMovieResponse find_movie_response = 21;
+    FindMovieRequest find_movie_request = 12;
+    FindMovieResponse find_movie_response = 13;
 
     ErrorResponse error_response = 30;
   }
