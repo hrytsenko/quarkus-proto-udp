@@ -9,13 +9,13 @@
 
   <properties>
     <maven.compiler.release>25</maven.compiler.release>
-    <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
-    <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.30.4</quarkus.platform.version>
     <compiler-plugin.version>3.14.1</compiler-plugin.version>
     <surefire-plugin.version>3.5.4</surefire-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+    <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+    <quarkus.platform.version>3.30.4</quarkus.platform.version>
     <protobuf.version>4.33.1</protobuf.version>
     <lombok.version>1.18.42</lombok.version>
   </properties>
@@ -90,7 +90,8 @@
         <extensions>true</extensions>
         <configuration>
           <jvmArgs>
-            --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow
+            --enable-native-access=ALL-UNNAMED
+            --sun-misc-unsafe-memory-access=allow
           </jvmArgs>
         </configuration>
         <executions>
