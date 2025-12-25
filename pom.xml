@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>hrytsenko</groupId>
   <artifactId>quarkus-proto-udp</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0</version>
 
   <properties>
     <maven.compiler.release>25</maven.compiler.release>
