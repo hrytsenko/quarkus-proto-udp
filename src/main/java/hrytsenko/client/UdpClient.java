@@ -84,7 +84,7 @@ class UdpClient {
           }
         });
 
-    var requestTimer = vertx.setTimer(clientTimeout, id -> {
+    var requestTimer = vertx.setTimer(clientTimeout, _ -> {
       log.info("Request dropped {}", requestEnvelope.getId());
       responsePromises.remove(requestEnvelope.getId());
       requestFuture.completeExceptionally(new RuntimeException("Request dropped"));
